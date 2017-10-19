@@ -83,7 +83,8 @@ def svm_loss_vectorized(W, X, y, reg):
   scores = X.dot(W)
   correct_class_score = np.sum(scores * y_enc, axis=1, keepdims=True)
   margins = (scores - correct_class_score + 1) * y_enc_inv
-  margins *= margins > 0
+  margins_mask = margins > 0
+  margins *= margins_mask
   loss = (1./N) * np.sum(margins)
   #############################################################################
   #                             END OF YOUR CODE                              #
@@ -99,7 +100,10 @@ def svm_loss_vectorized(W, X, y, reg):
   # to reuse some of the intermediate values that you used to compute the     #
   # loss.                                                                     #
   #############################################################################
-  pass
+  counts = np.sum(margins_mask, axis=1, keepdims=True)
+  dW = X.T.dot(margins_mask) - (X * counts).T.dot(y_enc)
+  dW /= N
+  dW += reg * 2 * W
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
