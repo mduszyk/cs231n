@@ -32,14 +32,24 @@ def softmax_loss_naive(W, X, y, reg):
   #############################################################################
 
   N = X.shape[0]
+  C = W.shape[1]
+  y_enc = np.eye(C)[y]
+
   for i in xrange(N):
     f = X[i].dot(W)
     # numeric stability fix: shift the values of f so that the highest number is 0
     f -= np.max(f)
     loss += - f[y[i]] + np.log(np.sum(np.exp(f)))
+    d = np.exp(f)
+    d /= np.sum(d)
+    for j in xrange(C):
+        dW[:, j] += X[i] * (d[j] - y_enc[i][j])
 
   loss /= N
   loss += reg * np.sum(W * W)
+
+  dW /= N
+  dW += reg * 2 * W
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
