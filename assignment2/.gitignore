@@ -1,3 +1,6 @@
 *.swp
 *.pyc
 .env/*
+.idea
+.ipynb_checkpoints
+cs231n/im2col_cython.cpython-36m-x86_64-linux-gnu.so
