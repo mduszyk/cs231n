@@ -187,7 +187,7 @@ class FullyConnectedNet(object):
         ############################################################################
 
         all_dims = [input_dim] + hidden_dims + [num_classes]
-        for i in range(len(all_dims) - 1):
+        for i in range(self.num_layers):
             rows = all_dims[i]
             cols = all_dims[i + 1]
             l = i + 1
