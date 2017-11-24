@@ -109,10 +109,10 @@ class TwoLayerNet(object):
         W1 = self.params["W1"]
         W2 = self.params["W2"]
 
-        loss, da2 = softmax_loss(scores, y)
+        loss, dscores = softmax_loss(scores, y)
         loss += .5 * self.reg * (np.sum(W1 * W1) + np.sum(W2 * W2))
 
-        da1, dW2, db2 = affine_backward(da2, cache2)
+        da1, dW2, db2 = affine_backward(dscores, cache2)
         dX, dW1, db1 = affine_relu_backward(da1, cache1)
 
         grads["W2"] = dW2 + self.reg * W2
@@ -251,7 +251,24 @@ class FullyConnectedNet(object):
         # self.bn_params[1] to the forward pass for the second batch normalization #
         # layer, etc.                                                              #
         ############################################################################
-        pass
+
+        cache = {}
+        a = X
+
+        # forward for hidden layers
+        for l in range(1, self.num_layers):
+            W = self.params["W%s" % l]
+            b = self.params["b%s" % l]
+            a, c = affine_relu_forward(a, W, b)
+            cache["affine_relu_%s" % l] = c
+
+        # forward for output layer
+        l = self.num_layers
+        W = self.params["W%s" % l]
+        b = self.params["b%s" % l]
+        scores, c = affine_forward(a, W, b)
+        cache["affine_%s" % l] = c
+
         ############################################################################
         #                             END OF YOUR CODE                             #
         ############################################################################
@@ -274,7 +291,31 @@ class FullyConnectedNet(object):
         # automated tests, make sure that your L2 regularization includes a factor #
         # of 0.5 to simplify the expression for the gradient.                      #
         ############################################################################
-        pass
+
+        loss, dscores = softmax_loss(scores, y)
+        # add regularization
+        W_norm = 0
+        for l in range(1, self.num_layers + 1):
+            W = self.params["W%s" % l]
+            W_norm += np.sum(W * W)
+        loss += .5 * self.reg * W_norm
+
+        # backprop step for last layer
+        l = self.num_layers
+        c = cache["affine_%s" % l]
+        da, dW, db = affine_backward(dscores, c)
+        W = self.params["W%s" % l]
+        grads["W%s" % l] = dW + self.reg * W
+        grads["b%s" % l] = db
+
+        # backprop for hidden layers
+        for l in range(self.num_layers - 1, 0, -1):
+            c = cache["affine_relu_%s" % l]
+            da, dW, db = affine_relu_backward(da, c)
+            W = self.params["W%s" % l]
+            grads["W%s" % l] = dW + self.reg * W
+            grads["b%s" % l] = db
+
         ############################################################################
         #                             END OF YOUR CODE                             #
         ############################################################################
