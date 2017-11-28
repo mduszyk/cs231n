@@ -141,7 +141,7 @@ def adam(x, dx, config=None):
     config.setdefault('epsilon', 1e-8)
     config.setdefault('m', np.zeros_like(x))
     config.setdefault('v', np.zeros_like(x))
-    config.setdefault('t', 1)
+    config.setdefault('t', 0)
 
     next_x = None
     ###########################################################################
@@ -156,7 +156,7 @@ def adam(x, dx, config=None):
     epsilon = config['epsilon']
     m = config['m']
     v = config['v']
-    t = config['t']
+    t = config['t'] + 1
 
     m = beta1 * m + (1 - beta1) * dx
     mt = m / (1 - beta1 ** t)
@@ -166,6 +166,7 @@ def adam(x, dx, config=None):
 
     config['m'] = m
     config['v'] = v
+    config['t'] = t
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
