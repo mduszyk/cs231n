@@ -180,7 +180,14 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         x_norm = (x - sample_mean) / np.sqrt(sample_var + eps)
         out = gamma * x_norm + beta
 
-        cache = {"x_norm": x_norm}
+        cache = {
+            "x": x,
+            "eps": eps,
+            "gamma": gamma,
+            "sample_mean": sample_mean,
+            "sample_var": sample_var,
+            "x_norm": x_norm
+        }
 
         #######################################################################
         #                           END OF YOUR CODE                          #
@@ -231,9 +238,22 @@ def batchnorm_backward(dout, cache):
     # results in the dx, dgamma, and dbeta variables.                         #
     ###########################################################################
 
+    x = cache["x"]
+    eps = cache["eps"]
+    gamma = cache["gamma"]
+    sample_mean = cache["sample_mean"]
+    sample_var = cache["sample_var"]
     x_norm = cache["x_norm"]
 
-    dx = np.zeros_like(dout) # TODO
+    N = x_norm.shape[0]
+    sigma_with_eps = np.sqrt(sample_var + eps)
+
+    d_x_norm = dout * gamma
+    d_var = np.sum(-.5 * d_x_norm * (x - sample_mean) * np.power(sample_var + eps, -1.5), axis=0)
+    d_var_d_x = (2 / N) * np.sum(x - sample_mean, axis=0)
+    d_mean = np.sum(d_x_norm * (-1 / sigma_with_eps), axis=0) - d_var_d_x * d_var
+    dx = (1 / sigma_with_eps) * d_x_norm + d_var * (2 / N) * (x - sample_mean) + (1 / N) * d_mean
+
     dgamma = np.sum(x_norm * dout, axis=0)
     dbeta = np.sum(dout, axis=0)
 
