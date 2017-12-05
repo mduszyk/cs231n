@@ -193,7 +193,7 @@ class FullyConnectedNet(object):
             l = i + 1
             self.params["W%s" % l] = weight_scale * np.random.randn(rows, cols)
             self.params["b%s" % l] = np.zeros((1, cols))
-            if self.use_batchnorm:
+            if self.use_batchnorm and l < self.num_layers:
                 self.params["gamma%s" % l] = np.ones((1, cols))
                 self.params["beta%s" % l] = np.zeros((1, cols))
 
