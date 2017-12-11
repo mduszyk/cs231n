@@ -271,6 +271,9 @@ class FullyConnectedNet(object):
             else:
                 a, c = affine_relu_forward(a, W, b)
                 cache["affine_relu_%s" % l] = c
+            if self.use_dropout:
+                a, c = dropout_forward(a, self.dropout_param)
+                cache["dropout_%s" % l] = c
 
         # forward for output layer
         l = self.num_layers
@@ -320,6 +323,9 @@ class FullyConnectedNet(object):
 
         # backprop for hidden layers
         for l in range(self.num_layers - 1, 0, -1):
+            if self.use_dropout:
+                c = cache["dropout_%s" % l]
+                da = dropout_backward(da, c)
             if self.use_batchnorm:
                 c = cache["affine_bn_relu_%s" % l]
                 da, dW, db, dgamma, dbeta = affine_bn_relu_backward(da, c)
