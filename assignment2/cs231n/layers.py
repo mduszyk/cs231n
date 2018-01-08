@@ -417,8 +417,8 @@ def conv_forward_naive(x, w, b, conv_param):
                     k1 = k0 + HH
                     l0 = l * stride
                     l1 = l0 + WW
-                    x_crop = xi[:, k0:k1, l0:l1]
-                    out[i, j, k, l] = np.sum(x_crop * w[j]) + b[j]
+                    x_cropped = xi[:, k0:k1, l0:l1]
+                    out[i, j, k, l] = np.sum(x_cropped * w[j]) + b[j]
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
@@ -444,7 +444,32 @@ def conv_backward_naive(dout, cache):
     ###########################################################################
     # TODO: Implement the convolutional backward pass.                        #
     ###########################################################################
-    pass
+    x, w, b, conv_param = cache
+    stride = conv_param["stride"]
+    pad = conv_param["pad"]
+    x_padded = np.pad(x, pad_width=((0, 0), (0, 0), (pad, pad), (pad, pad)), mode='constant')
+
+    N, _, H, W = x.shape
+    F, _, HH, WW = w.shape
+    H_out = int(1 + (H + 2 * pad - HH) / stride)
+    W_out = int(1 + (W + 2 * pad - WW) / stride)
+
+    dx = np.zeros_like(x)
+    dw = np.zeros_like(w)
+    db = np.zeros_like(b)
+
+    for i in range(N):
+        xi = x_padded[i]
+        for j in range(F):
+            for k in range(H_out):
+                for l in range(W_out):
+                    k0 = k * stride
+                    k1 = k0 + HH
+                    l0 = l * stride
+                    l1 = l0 + WW
+                    x_cropped = xi[:, k0:k1, l0:l1]
+                    dw[j] += x_cropped * dout[i, j, k, l]
+
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
