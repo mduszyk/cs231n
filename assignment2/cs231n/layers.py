@@ -471,7 +471,7 @@ def conv_backward_naive(dout, cache):
                     dx[i, :, k0:k1, l0:l1] += w[j] * dout[i, j, k, l]
 
     # remove pad from dx
-    dx = dx[:, :, 1:H+1, 1:W+1]
+    dx = dx[:, :, pad:H+pad, pad:W+pad]
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
