@@ -409,7 +409,6 @@ def conv_forward_naive(x, w, b, conv_param):
     out = np.zeros((N, F, H_out, W_out))
 
     for i in range(N):
-        xi = x_padded[i]
         for j in range(F):
             for k in range(H_out):
                 for l in range(W_out):
@@ -417,7 +416,7 @@ def conv_forward_naive(x, w, b, conv_param):
                     k1 = k0 + HH
                     l0 = l * stride
                     l1 = l0 + WW
-                    x_cropped = xi[:, k0:k1, l0:l1]
+                    x_cropped = x_padded[i, :, k0:k1, l0:l1]
                     out[i, j, k, l] = np.sum(x_cropped * w[j]) + b[j]
 
     ###########################################################################
@@ -454,12 +453,11 @@ def conv_backward_naive(dout, cache):
     H_out = int(1 + (H + 2 * pad - HH) / stride)
     W_out = int(1 + (W + 2 * pad - WW) / stride)
 
-    dx = np.zeros_like(x)
     dw = np.zeros_like(w)
     db = np.zeros_like(b)
+    dx = np.zeros_like(x_padded)
 
     for i in range(N):
-        xi = x_padded[i]
         for j in range(F):
             for k in range(H_out):
                 for l in range(W_out):
@@ -467,8 +465,13 @@ def conv_backward_naive(dout, cache):
                     k1 = k0 + HH
                     l0 = l * stride
                     l1 = l0 + WW
-                    x_cropped = xi[:, k0:k1, l0:l1]
+                    x_cropped = x_padded[i, :, k0:k1, l0:l1]
                     dw[j] += x_cropped * dout[i, j, k, l]
+                    db[j] += dout[i, j, k, l]
+                    dx[i, :, k0:k1, l0:l1] += w[j] * dout[i, j, k, l]
+
+    # remove pad from dx
+    dx = dx[:, :, 1:H+1, 1:W+1]
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
