@@ -455,7 +455,7 @@ def conv_backward_naive(dout, cache):
 
     dw = np.zeros_like(w)
     db = np.zeros_like(b)
-    dx = np.zeros_like(x_padded)
+    dx_padded = np.zeros_like(x_padded)
 
     for i in range(N):
         for j in range(F):
@@ -468,10 +468,10 @@ def conv_backward_naive(dout, cache):
                     x_cropped = x_padded[i, :, k0:k1, l0:l1]
                     dw[j] += x_cropped * dout[i, j, k, l]
                     db[j] += dout[i, j, k, l]
-                    dx[i, :, k0:k1, l0:l1] += w[j] * dout[i, j, k, l]
+                    dx_padded[i, :, k0:k1, l0:l1] += w[j] * dout[i, j, k, l]
 
     # remove pad from dx
-    dx = dx[:, :, pad:H+pad, pad:W+pad]
+    dx = dx_padded[:, :, pad:-pad, pad:-pad]
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
