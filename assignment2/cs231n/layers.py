@@ -443,6 +443,7 @@ def conv_backward_naive(dout, cache):
     ###########################################################################
     # TODO: Implement the convolutional backward pass.                        #
     ###########################################################################
+    
     x, w, b, conv_param = cache
     stride = conv_param["stride"]
     pad = conv_param["pad"]
