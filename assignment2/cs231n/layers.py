@@ -467,8 +467,7 @@ def conv_backward_naive(dout, cache):
                     k1 = k0 + HH
                     l0 = l * stride
                     l1 = l0 + WW
-                    x_cropped = x_padded[i, :, k0:k1, l0:l1]
-                    dw[j] += x_cropped * dout[i, j, k, l]
+                    dw[j] += x_padded[i, :, k0:k1, l0:l1] * dout[i, j, k, l]
                     db[j] += dout[i, j, k, l]
                     dx_padded[i, :, k0:k1, l0:l1] += w[j] * dout[i, j, k, l]
 
