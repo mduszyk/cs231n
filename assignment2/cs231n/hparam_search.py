@@ -25,7 +25,7 @@ if __name__ == "__main__":
         "learning_rate": [1e-4, 1e-3, 1e-2],
         "dropout": [0.25, 0.5, 0.75]
     }
-    print("Grid layout for params: %s" % grid_params)
+    print("Grid layout: %s" % grid_params)
     for param_set in grid_layout(grid_params):
         print(param_set)
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         "learning_rate": lambda: 10 ** np.random.uniform(-6, 1),
         "dropout": lambda: np.random.uniform(0, 1)
     }
-    print("Random layout for params: %s" % random_params)
+    print("Random layout: %s" % random_params)
     for param_set in random_layout(random_params, n=7):
         print(param_set)
 
