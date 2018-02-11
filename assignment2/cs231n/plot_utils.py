@@ -1,7 +1,13 @@
 import matplotlib.pyplot as plt
 
 
-def plot_learning_curves(loss, train_acc, val_acc, show=True, save_path=None):
+def plot_learning_curves(**kwargs):
+    loss = kwargs["loss"]
+    train_acc = kwargs["train_acc"]
+    val_acc = kwargs["val_acc"]
+    show = kwargs.get("show", True)
+    save_path = kwargs.get("save_path")
+
     plt.subplot(1, 2, 1)
     plt.title('Training loss')
     plt.xlabel('Iteration')
@@ -13,7 +19,7 @@ def plot_learning_curves(loss, train_acc, val_acc, show=True, save_path=None):
     plt.xlabel('Epoch')
     plt.plot(train_acc, '-o', label="train")
     plt.plot(val_acc, '-o', label="val")
-    plt.legend(loc='upper center', ncol=4)
+    plt.legend(loc='upper left', ncol=4)
 
     plt.gcf().set_size_inches(15, 5)
 
