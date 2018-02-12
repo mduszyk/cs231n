@@ -21,10 +21,12 @@ def plot_learning_curves(**kwargs):
     plt.plot(val_acc, '-o', label="val")
     plt.legend(loc='upper left', ncol=4)
 
-    plt.gcf().set_size_inches(15, 5)
+    fig = plt.gcf()
+    fig.set_size_inches(15, 5)
+
+    if save_path is not None:
+        fig.savefig(save_path)
 
     if show:
         plt.show()
 
-    if save_path is not None:
-        plt.savefig(save_path)
