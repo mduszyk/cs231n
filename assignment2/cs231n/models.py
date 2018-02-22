@@ -86,7 +86,7 @@ conv_relu_pool_2_model = nn.Sequential(
 
     nn.Linear(in_features=1024, out_features=10)
 )
-CONV_RELU_POOL_2 = ("ConvReluPool2", conv_relu_pool_model)
+CONV_RELU_POOL_2 = ("ConvReluPool2", conv_relu_pool_2_model)
 
 conv_relu_pool_3_model = nn.Sequential(
     nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1),
@@ -124,4 +124,4 @@ conv_relu_pool_3_model = nn.Sequential(
 
     nn.Linear(in_features=1024, out_features=10)
 )
-CONV_RELU_POOL_3 = ("ConvReluPool3", conv_relu_pool_model)
+CONV_RELU_POOL_3 = ("ConvReluPool3", conv_relu_pool_3_model)
