@@ -191,3 +191,89 @@ conv_stride_3_model = nn.Sequential(
     nn.Linear(in_features=1024, out_features=10)
 )
 CONV_STRIDE_3 = ("ConvStride3", conv_stride_3_model)
+
+conv_conv_pool_model = nn.Sequential(
+    nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 16x16x64
+
+    nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 8x8x128
+
+    nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 4x4x256
+
+    nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 2x2x512
+
+    Flatten(),
+
+    nn.Linear(in_features=2048, out_features=1024),
+    nn.ReLU(inplace=True),
+
+    nn.Linear(in_features=1024, out_features=1024),
+    nn.ReLU(inplace=True),
+
+    nn.Linear(in_features=1024, out_features=10)
+)
+CONV_CONV_POOL = ("ConvConvPool", conv_conv_pool_model)
+
+conv_conv_pool_2_model = nn.Sequential(
+    nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 16x16x64
+
+    nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 8x8x128
+
+    nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 4x4x256
+
+    nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(kernel_size=2, stride=2),
+    # 2x2x512
+
+    Flatten(),
+
+    nn.Linear(in_features=2048, out_features=1024),
+    nn.ReLU(inplace=True),
+
+    nn.Linear(in_features=1024, out_features=1024),
+    nn.ReLU(inplace=True),
+
+    nn.Linear(in_features=1024, out_features=10)
+)
+CONV_CONV_POOL_2 = ("ConvConvPool2", conv_conv_pool_2_model)

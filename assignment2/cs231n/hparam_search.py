@@ -37,4 +37,11 @@ if __name__ == "__main__":
     for param_set in random_layout(random_params, n=7):
         print(param_set)
 
+    mix_params = {
+        "models": ["Model1", "Model2"],
+        "params": random_layout(random_params, n=3)
+    }
+    print("Mix layout: %s" % mix_params)
+    for param_set in grid_layout(mix_params):
+        print(param_set)
 
