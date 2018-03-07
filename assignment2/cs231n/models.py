@@ -187,15 +187,15 @@ def conv_relu_pool_4_dr(dropout=0.5):
 
         Flatten(),
 
-        nn.Dropout(p=dropout),
+        nn.Dropout(p=dropout, inplace=True),
         nn.Linear(in_features=4096, out_features=2048),
         nn.ReLU(inplace=True),
 
-        nn.Dropout(p=dropout),
+        nn.Dropout(p=dropout, inplace=True),
         nn.Linear(in_features=2048, out_features=1024),
         nn.ReLU(inplace=True),
 
-        nn.Dropout(p=dropout),
+        nn.Dropout(p=dropout, inplace=True),
         nn.Linear(in_features=1024, out_features=10)
     )
 
@@ -362,9 +362,7 @@ def conv_conv_pool_2():
     )
 
 
-def conv_conv_pool_2_dr():
-    """ TODO add dropout
-    """
+def conv_conv_pool_2_dr(dropout=0.5):
     return nn.Sequential(
         nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1),
         nn.ReLU(inplace=True),
@@ -399,12 +397,15 @@ def conv_conv_pool_2_dr():
         # 2x2x512
 
         Flatten(),
+        nn.Dropout(p=dropout, inplace=True),
 
         nn.Linear(in_features=2048, out_features=1024),
         nn.ReLU(inplace=True),
+        nn.Dropout(p=dropout, inplace=True),
 
         nn.Linear(in_features=1024, out_features=1024),
         nn.ReLU(inplace=True),
+        nn.Dropout(p=dropout, inplace=True),
 
         nn.Linear(in_features=1024, out_features=10)
     )
