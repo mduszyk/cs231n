@@ -183,16 +183,16 @@ def conv_relu_pool_4_dr(dropout=0.5):
         # 2x2x1024
 
         Flatten(),
-
         nn.Dropout(p=dropout),
+
         nn.Linear(in_features=4096, out_features=2048),
         nn.ReLU(inplace=True),
-
         nn.Dropout(p=dropout),
+
         nn.Linear(in_features=2048, out_features=1024),
         nn.ReLU(inplace=True),
-
         nn.Dropout(p=dropout),
+
         nn.Linear(in_features=1024, out_features=10)
     )
 
