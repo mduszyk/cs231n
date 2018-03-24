@@ -1,4 +1,5 @@
 import torch.nn as nn
+from torchvision import transforms
 
 
 class Flatten(nn.Module):
@@ -541,3 +542,13 @@ def conv_conv_pool_3():
 
         nn.Linear(in_features=2048, out_features=10)
     )
+
+
+transforms_1 = transforms.Compose([
+    #transforms.RandomRotation(degrees=7),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomResizedCrop(32, scale=(0.85, 1.0), ratio=(0.8, 1.2)),
+    #transforms.RandomGrayscale(p=0.1),
+    transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
+    transforms.ToTensor()
+])

@@ -11,7 +11,7 @@ def plot_learning_curves(**kwargs):
     plt.subplot(1, 2, 1)
     plt.title('Training loss')
     plt.xlabel('Iteration')
-    plt.plot(loss, 'o', label="loss")
+    plt.plot(loss, label="loss")
     plt.legend(loc='upper center', ncol=4)
 
     plt.subplot(1, 2, 2)
