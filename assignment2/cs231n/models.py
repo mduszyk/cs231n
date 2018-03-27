@@ -1,4 +1,5 @@
 import torch.nn as nn
+from torch import optim
 from torchvision import transforms
 
 
@@ -544,11 +545,28 @@ def conv_conv_pool_3():
     )
 
 
-transforms_1 = transforms.Compose([
-    #transforms.RandomRotation(degrees=7),
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomResizedCrop(32, scale=(0.85, 1.0), ratio=(0.8, 1.2)),
-    #transforms.RandomGrayscale(p=0.1),
-    transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
-    transforms.ToTensor()
-])
+def lr_scheduler_step_1(optimizer):
+    return optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+
+
+def lr_scheduler_plateau(optimizer):
+    return optim.lr_scheduler.ReduceLROnPlateau(optimizer)
+
+
+def transforms_1():
+    return transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.85, 1.0), ratio=(0.8, 1.2)),
+        transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
+        transforms.ToTensor()
+    ])
+
+def transforms_2():
+    return transforms.Compose([
+        transforms.RandomRotation(degrees=7),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(0.75, 1.3)),
+        transforms.RandomGrayscale(p=0.1),
+        transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
+        transforms.ToTensor()
+    ])
