@@ -549,6 +549,10 @@ def lr_scheduler_step_1(optimizer):
     return optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
 
+def lr_scheduler_step_2(optimizer):
+    return optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
+
+
 def lr_scheduler_plateau(optimizer):
     return optim.lr_scheduler.ReduceLROnPlateau(optimizer)
 
@@ -561,12 +565,32 @@ def transforms_1():
         transforms.ToTensor()
     ])
 
+
 def transforms_2():
     return transforms.Compose([
         transforms.RandomRotation(degrees=7),
         transforms.RandomHorizontalFlip(),
         transforms.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(0.75, 1.3)),
         transforms.RandomGrayscale(p=0.1),
+        transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
+        transforms.ToTensor()
+    ])
+
+
+def transforms_3():
+    return transforms.Compose([
+        transforms.RandomRotation(degrees=3),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.83, 1.0), ratio=(0.78, 1.25)),
+        transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
+        transforms.ToTensor()
+    ])
+
+
+def transforms_4():
+    return transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.83, 1.0), ratio=(0.78, 1.25)),
         transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25, hue=0.05),
         transforms.ToTensor()
     ])
