@@ -624,3 +624,25 @@ def transforms_6():
         transforms.ColorJitter(brightness=0.27, contrast=0.27, saturation=0.27, hue=0.07),
         transforms.ToTensor()
     ])
+
+
+def transforms_7():
+    return transforms.Compose([
+        transforms.RandomRotation(degrees=10),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.7, 1.0), ratio=(0.7, 1.4)),
+        transforms.RandomGrayscale(p=0.1),
+        transforms.ColorJitter(brightness=0.27, contrast=0.27, saturation=0.27, hue=0.08),
+        transforms.ToTensor()
+    ])
+
+
+def transforms_8():
+    return transforms.Compose([
+        transforms.RandomRotation(degrees=12),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomResizedCrop(32, scale=(0.7, 1.0), ratio=(0.7, 1.4)),
+        transforms.RandomGrayscale(p=0.15),
+        transforms.ColorJitter(brightness=0.27, contrast=0.27, saturation=0.27, hue=0.1),
+        transforms.ToTensor()
+    ])
