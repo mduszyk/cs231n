@@ -32,18 +32,25 @@ def softmax_loss_naive(W, X, y, reg):
   #############################################################################
 
   N = X.shape[0]
+  D = X.shape[1]
   C = W.shape[1]
-  y_enc = np.eye(C)[y]
 
   for i in xrange(N):
     f = X[i].dot(W)
     # numeric stability fix: shift the values of f so that the highest number is 0
     f -= np.max(f)
-    loss += - f[y[i]] + np.log(np.sum(np.exp(f)))
-    d = np.exp(f)
-    d /= np.sum(d)
-    for j in xrange(C):
-        dW[:, j] += X[i] * (d[j] - y_enc[i][j])
+
+    f_exp = np.exp(f)
+    f_exp_sum = np.sum(f_exp)
+
+    loss += -np.log(f_exp[y[i]] / f_exp_sum)
+
+    df = f_exp / f_exp_sum
+    df[y[i]] -= 1
+
+    # for j in xrange(C):
+    #     dW[:, j] += X[i] * df[j]
+    dW += np.dot(X[i].reshape(D, 1), df.reshape(1, C))
 
   loss /= N
   loss += reg * np.sum(W * W)
@@ -79,20 +86,22 @@ def softmax_loss_vectorized(W, X, y, reg):
   C = W.shape[1]
 
   y_enc = np.eye(C)[y]
+
   F = X.dot(W)
   # numeric stability fix
   F -= np.max(F)
+
   F_exp = np.exp(F)
   F_exp_sum = np.sum(F_exp, axis=1, keepdims=True)
+  F_exp_y = F_exp[range(N), y].reshape(N, 1)
 
-  loss = np.sum(- np.sum(F * y_enc, axis=1, keepdims=True) + np.log(F_exp_sum))
-  loss /= N
-  loss += reg * np.sum(W * W)
+  loss = np.sum(-np.log(F_exp_y / F_exp_sum)) / N
+  loss += .5 * reg * np.sum(W * W)
 
-  s = F_exp / F_exp_sum
-  df = s - y_enc
+  dF = F_exp / F_exp_sum
+  dF[range(N), y] -= 1
 
-  dW = X.T.dot(df) / N + reg * 2 * W
+  dW = X.T.dot(dF) / N + reg * W
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
