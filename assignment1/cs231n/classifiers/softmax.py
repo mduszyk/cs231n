@@ -83,9 +83,6 @@ def softmax_loss_vectorized(W, X, y, reg):
   #############################################################################
 
   N = X.shape[0]
-  C = W.shape[1]
-
-  y_enc = np.eye(C)[y]
 
   F = X.dot(W)
   # numeric stability fix
