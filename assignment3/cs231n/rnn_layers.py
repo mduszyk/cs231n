@@ -110,7 +110,17 @@ def rnn_forward(x, h0, Wx, Wh, b):
     # input data. You should use the rnn_step_forward function that you defined  #
     # above. You can use a for loop to help compute the forward pass.            #
     ##############################################################################
-    pass
+
+    N, T, _ = x.shape
+    _, H = h0.shape
+    h = np.zeros((N, T, H))
+    cache = []
+    next_h = h0
+    for t in range(T):
+        next_h, c = rnn_step_forward(x[:, t, :], next_h, Wx, Wh, b)
+        h[:, t, :] = next_h
+        cache.append(c)
+
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
@@ -137,7 +147,26 @@ def rnn_backward(dh, cache):
     # sequence of data. You should use the rnn_step_backward function that you   #
     # defined above. You can use a for loop to help compute the backward pass.   #
     ##############################################################################
-    pass
+
+    N, T, H = dh.shape
+    _, D = cache[0][0].shape
+
+    dx = np.zeros((N, T, D))
+    dWx = np.zeros((D, H))
+    dWh = np.zeros((H, H))
+    db = np.zeros((H,))
+    dprev_h = np.zeros((N, H))
+
+    for t in reversed(range(len(cache))):
+        c = cache[t]
+        # h impacts loss and next state, thus sum:
+        dnext_h = dh[:, t, :] + dprev_h
+        dx[:, t, :], dprev_h, dWx_t, dWh_t, db_t = rnn_step_backward(dnext_h, c)
+        dWx += dWx_t
+        dWh += dWh_t
+        db += db_t
+    dh0 = dprev_h
+
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
