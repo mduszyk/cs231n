@@ -279,16 +279,25 @@ def lstm_step_forward(x, prev_h, prev_c, Wx, Wh, b):
     # You may want to use the numerically stable sigmoid implementation above.  #
     #############################################################################
 
-    H = Wh.shape[0]
-
     a = np.dot(x, Wx) + np.dot(prev_h, Wh) + b
-    i = sigmoid(a[:, 0:H])
-    f = sigmoid(a[:, H:2*H])
-    o = sigmoid(a[:, 2*H:3*H])
-    g = np.tanh(a[:, 3*H:4*H])
+
+    # split
+    H = Wh.shape[0]
+    ai = a[:, 0:H]
+    af = a[:, H:2*H]
+    ao = a[:, 2*H:3*H]
+    ag = a[:, 3*H:4*H]
+
+    i = sigmoid(ai)
+    f = sigmoid(af)
+    o = sigmoid(ao)
+    g = np.tanh(ag)
 
     next_c = f * prev_c + i * g
-    next_h = o * np.tanh(next_c)
+    tanh_next_c = np.tanh(next_c)
+    next_h = o * tanh_next_c
+
+    cache = (x, Wx, Wh, b, i, f, o, g, prev_h, prev_c, tanh_next_c)
 
     ##############################################################################
     #                               END OF YOUR CODE                             #
@@ -321,7 +330,24 @@ def lstm_step_backward(dnext_h, dnext_c, cache):
     # HINT: For sigmoid and tanh you can compute local derivatives in terms of  #
     # the output value from the nonlinearity.                                   #
     #############################################################################
-    pass
+
+    x, Wx, Wh, b, i, f, o, g, prev_h, prev_c, tanh_next_c = cache
+
+    dc = dnext_h * o * (1 - tanh_next_c ** 2) + dnext_c
+
+    dai = dc * g * i * (1 - i)
+    daf = dc * prev_c * f * (1 - f)
+    dao = dnext_h * tanh_next_c * o * (1 - o)
+    dag = dc * i * (1 - g ** 2)
+    da = np.concatenate((dai, daf, dao, dag), axis=1)
+
+    dx = np.dot(da, Wx.T)
+    dprev_c = f * dc
+    dWx = np.dot(x.T, da)
+    dprev_h = np.dot(da, Wh.T)
+    dWh = np.dot(prev_h.T, da)
+    db = np.sum(da, axis=0)
+
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
