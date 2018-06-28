@@ -233,12 +233,10 @@ class CaptioningRNN(object):
         for n in range(N):
             word = self._start
             h = h0[n]
-            c = None
+            c = np.zeros_like(h)
             for t in range(max_length):
                 x, _ = word_embedding_forward(word, W_embed)
                 if self.cell_type == "lstm":
-                    if c is None:
-                        c = np.zeros_like(h)
                     h, c, _ = lstm_step_forward(x, h, c, Wx, Wh, b)
                 else:
                     h, _ = rnn_step_forward(x, h, Wx, Wh, b)
