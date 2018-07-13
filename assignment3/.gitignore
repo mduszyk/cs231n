@@ -9,3 +9,4 @@ cs231n/datasets/squeezenet.ckpt.index
 cs231n/datasets/squeezenet.ckpt.meta
 .idea/
 cs231n/datasets/imagenet_val_25.npz.1
+cs231n/datasets/MNIST_data/
